@@ -7,7 +7,8 @@ import {
   showLoginError, 
   btnLogin,
   btnSignup,
-  btnLogout
+  btnLogout,
+  showLinkForm
 } from './ui'
 
 import { initializeApp } from 'firebase/app';
@@ -72,9 +73,10 @@ const monitorAuthState = async () => {
       console.log(user)
       showApp()
       showLoginState(user)
-
       hideLoginError()
-      hideLinkError()
+      hideLoginError()
+      showLinkForm()
+      console.log("ran the fucking function")
     }
     else {
       showLoginForm()

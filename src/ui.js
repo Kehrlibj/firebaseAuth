@@ -43,4 +43,27 @@ export const showLoginState = (user) => {
   lblAuthState.innerHTML = `You're logged in as ${user.displayName} (uid: ${user.uid}, email: ${user.email}) `
 }
 
+// A function that reveals a submittable form when the Login State becomes true
+export const showLinkForm = () => {
+  //create form elements
+  const form = document.createElement('form');
+  const input = document.createElement('input');
+  const submit = document.createElement('button');
+
+  //Configure form elements
+  input.innerText = "enter a song name";
+  submitButton.innerText = "submit";
+  submitButton.setAttribute('type', 'submit');
+
+  //append form elements to the form
+  form.appendChild(input);
+  form.appendChild(submit);
+
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const songName = input.value;
+    console.log(songName);
+  });
+}
+
 hideLoginError()
