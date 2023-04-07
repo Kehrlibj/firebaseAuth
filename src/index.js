@@ -7,8 +7,7 @@ import {
   showLoginError, 
   btnLogin,
   btnSignup,
-  btnLogout,
-  showLinkForm
+  btnLogout
 } from './ui'
 
 import { initializeApp } from 'firebase/app';
@@ -17,9 +16,10 @@ import {
   onAuthStateChanged, 
   signOut,
   createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  connectAuthEmulator
+  signInWithEmailAndPassword
 } from 'firebase/auth';
+
+import { testFunction } from './spotify';
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -75,8 +75,7 @@ const monitorAuthState = async () => {
       showLoginState(user)
       hideLoginError()
       hideLoginError()
-      showLinkForm()
-      console.log("ran the fucking function")
+      
     }
     else {
       showLoginForm()

@@ -36,6 +36,16 @@
     <div class="header">
       <h1>Welcome to Your Amazing App</h1>
     </div>
+    <!-- A form that allows you to submit the name of a song to the playlist managers... -->
+    <form id="song-form">
+      <label for="song-name">Song Name:</label>
+      <input type="text" id="song-name" name="song-name" required><br>
+
+      <label for="artist-name">Artist Name:</label>
+      <input type="text" id="artist-name" name="artist-name" required><br>
+
+      <input type="submit" value="Submit">
+    </form>
     <form>
       <div class="group">
         <div id="lblAuthState" class="authlabel"></div>
@@ -43,6 +53,9 @@
       <button id="btnLogout" type="button" class="button buttonBlue">Log out</button>
     </form>
   </div>
+
+  <button id="login-button">Login with Spotify</button>
+  <button id="test-button">Playlist Add?</button>
 
   <footer>
     <a href="https://firebase.google.com/" target="_blank"><img

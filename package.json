@@ -11,7 +11,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "firebase": "^9.18.0"
+    "buffer": "^6.0.3",
+    "firebase": "^9.18.0",
+    "spotify-web-api-js": "^1.5.2"
   },
   "devDependencies": {
     "css-loader": "^6.3.0",
