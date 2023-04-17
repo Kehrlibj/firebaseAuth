@@ -1,8 +1,7 @@
 import { Buffer } from 'buffer';
 import SpotifyWebApi from 'spotify-web-api-js';
 import {decrementAllowance} from './index.js';
-const spotifyApi = new SpotifyWebApi();
-const clientSecret = '8c894057bc894f158b7780ad77a6a6fa'; // Your secret
+const spotifyApi = new SpotifyWebApi(); // Your secret
 const clientId = '3cfeb414e83848a6bd70bee63a4c6996'; 
 const redirectUri = 'https://webpacktest-cca52.web.app/callback';
 
