@@ -1,208 +1,37 @@
 import { Buffer } from 'buffer';
+import { addTrackToDb } from './index.js';
 import SpotifyWebApi from 'spotify-web-api-js';
-import {decrementAllowance} from './index.js';
-const spotifyApi = new SpotifyWebApi(); // Your secret
-const clientId = '3cfeb414e83848a6bd70bee63a4c6996'; 
-const redirectUri = 'https://webpacktest-cca52.web.app/callback';
-
-function generateRandomString(length) {
-  let text = '';
-  let possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-
-  for (let i = 0; i < length; i++) {
-    text += possible.charAt(Math.floor(Math.random() * possible.length));
-  }
-  return text;
-}
-// Generate random string for state
-let codeVerifier = generateRandomString(128);
-
-//generate the value using the SHA256 algorithm from the given data
-async function generateCodeChallenge(codeVerifier) {
-  function base64encode(string) {
-    return btoa(String.fromCharCode.apply(null, new Uint8Array(string)))
-      .replace(/\+/g, '-')
-      .replace(/\//g, '_')
-      .replace(/=+$/, '');
-  }
-
-  const encoder = new TextEncoder();
-  const data = encoder.encode(codeVerifier);
-  const digest = await window.crypto.subtle.digest('SHA-256', data);
-
-  return base64encode(digest);
-}
-
-async function getAuthorizationUrl() {
-  try {
-    const codeChallenge = await generateCodeChallenge(codeVerifier);
-    const state = generateRandomString(16);
-    const scope = 'user-read-private user-read-email user-read-playback-state user-modify-playback-state user-read-currently-playing user-read-recently-played user-library-read user-library-modify playlist-modify-public playlist-modify-private';
-
-    localStorage.setItem('code-verifier', codeVerifier);
-
-    const args = new URLSearchParams({
-      response_type: 'code',
-      client_id: clientId,
-      scope: scope,
-      redirect_uri: redirectUri,
-      state: state,
-      code_challenge_method: 'S256',
-      code_challenge: codeChallenge
-    });
-
-    return 'https://accounts.spotify.com/authorize?' + args.toString();
-  } catch (error) {
-    console.error('Error:', error);
-  }
-}
-
-//This seems like the current problem...
-// async function redirectToSpotify() {
-//   try {
-//     const codeChallenge = await generateCodeChallenge(codeVerifier);
-//     const state = generateRandomString(16);
-//     const scope = 'user-read-private user-read-email';
-
-//     localStorage.setItem('code-verifier', codeVerifier);
-
-//     const args = new URLSearchParams({
-//       response_type: 'code',
-//       client_id: clientId,
-//       scope: scope,
-//       redirect_uri: redirectUri,
-//       state: state,
-//       code_challenge_method: 'S256',
-//       code_challenge: codeChallenge
-//     });
-
-//     window.location.href = 'https://accounts.spotify.com/authorize?' + args.toString();
-//   } catch (error) {
-//     console.error('Error:', error);
-//   }
-// }
-
-// document.getElementById('login-button').addEventListener('click', redirectToSpotify);
-
-async function handleCallback(url) {
-  const urlParams = new URLSearchParams(new URL(url).search);
-  const code = urlParams.get('code');
-  const state = urlParams.get('state');
-  const storedCodeVerifier = localStorage.getItem('code-verifier');
-
-  const APIbody = new URLSearchParams({
-    grant_type: 'authorization_code',
-    code: code,
-    redirect_uri: redirectUri,
-    client_id: clientId,
-    code_verifier: storedCodeVerifier
-  });
-
-  try {
-    const response = await fetch('https://accounts.spotify.com/api/token', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
-      },
-      body: APIbody
-    });
-
-    if (!response.ok) {
-      throw new Error('HTTP status ' + response.status);
-    }
-
-    const data = await response.json();
-    localStorage.setItem('access-token', data.access_token);
-    spotifyApi.setAccessToken(localStorage.getItem('access-token'));
-
-    // Redirect to a different URL, for example, '/app'
-    window.location.href = '/app'; // Change this to the desired URL
-  } catch (error) {
-    console.error('Error:', error);
-  }
-}
-
-async function requestUserAuthorization() {
-
-  const clientId = '3cfeb414e83848a6bd70bee63a4c6996'; // Your client id
-  let codeVerifier = generateRandomString(128);
-// Request user authorization
-  generateCodeChallenge(codeVerifier).then(codeChallenge => {
-  let state = generateRandomString(16);
-  let scope = 'user-read-private user-read-email user-read-playback-state user-modify-playback-state user-read-currently-playing user-read-recently-played user-library-read user-library-modify';
-
-  localStorage.setItem('code-verifier', codeVerifier);
-
-  let args = new URLSearchParams({
-    response_type: 'code',
-    client_id: clientId,
-    scope: scope,
-    redirect_uri: redirectUri,
-    state: state,
-    code_challenge_method: 'S256',
-    code_challenge: codeChallenge
-  });
-
-  window.location = 'https://accounts.spotify.com/authorize?' + args;
-  });
-}
 
 
-async function getProfile() {
-  let accessToken = localStorage.getItem('access-token');
 
-  const response = await fetch('https://api.spotify.com/v1/me', {
+
+
+export async function clientCredentials(client_id, client_secret) {
+  const authOptions = {
+    method: 'POST',
     headers: {
-      Authorization: 'Bearer ' + accessToken
-    }
-  });
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Authorization': 'Basic ' + btoa(client_id + ':' + client_secret),
+    },
+    body: new URLSearchParams({
+      grant_type: 'client_credentials'
+    })
+  };
 
-  const data = await response.json();
-  console.log(data);
-}
-  
-
-
-// Page manager to check if the user is authenticated
-window.addEventListener('DOMContentLoaded', async () => {
-  const currentUrl = window.location.href;
-  // Check if the URL contains the 'code' and 'state' parameters
-  if (currentUrl.includes('code=') && currentUrl.includes('state=')) {
-    // Call the handleCallback function with the current URL
-    await handleCallback(currentUrl);
-
-    // Optionally, you can clear the URL parameters after handling the callback
-  }
-
-  // Set the href attribute of the login button to the authorization URL
-  const loginButton = document.getElementById('login-button');
-  loginButton.href = await getAuthorizationUrl();
-});
-
-
-// Get the Adds a track to the playlist
-async function addTrack(playlistId, [trackUri]) {
-  const accessToken = localStorage.getItem('access-token');
-  console.log(trackUri)
   try {
-    const response = await fetch(`https://api.spotify.com/v1/playlists/${playlistId}/tracks`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + accessToken
-      },
-      body: JSON.stringify({
-        uris: [trackUri]
-      })
-    });
+    const response = await fetch('https://accounts.spotify.com/api/token', authOptions);
 
-    if (!response.ok) {
-      throw new Error('HTTP status ' + response.status);
+    if (response.ok) {
+      const body = await response.json();
+      const token = body.access_token;
+      localStorage.setItem('access-token', token);
+    } else {
+      console.error(`Error: ${response.status} ${response.statusText}`);
+      const errorBody = await response.json();
+      console.error(`Error details: ${JSON.stringify(errorBody)}`);
     }
-
-    console.log('Track added to playlist successfully');
   } catch (error) {
-    console.error('Error adding track to playlist:', error);
+    console.error(`Fetch error: ${error}`);
   }
 }
 
@@ -210,7 +39,8 @@ async function addTrack(playlistId, [trackUri]) {
 // Search spotify resources, 
 async function searchSpotify() {
   const searchInput = document.getElementById("searchInput").value;
-  const searchType = document.getElementById("searchType").value;
+  const searchType = "track";
+  clientCredentials();
   const accessToken = localStorage.getItem('access-token');
 
   try {
@@ -226,56 +56,112 @@ async function searchSpotify() {
 
     const data = await response.json();
     displaySearchResults(data);
+    const candy = document.getElementById("retro");
+    candy.style.display = "none";
   } catch (error) {
     console.error('Error searching Spotify:', error);
   }
 }
 
-//post the results neatly to the DOM
 function displaySearchResults(data) {
   const searchResults = document.getElementById("searchResults");
   searchResults.innerHTML = '';
 
-  const searchType = document.getElementById("searchType").value;
-  const items = data[searchType + 's'].items;
+  const searchType = "track";
+  let items = data[searchType + 's'].items;
+
+  // Sort items by popularity in descending order
+  items = items.sort((a, b) => b.popularity - a.popularity);
 
   for (const item of items) {
+    // Only display tracks that are not explicit
+    // if (item.explicit == false) {
     const div = document.createElement("div");
-    div.innerText = item.name;
     div.classList.add("searchResultItem");
+    div.style.display = 'flex';
+    div.style.justifyContent = 'space-between';
     div.addEventListener("click", async () => {
-      await addTrackToStagingCard(item);
+      addTrackToStagingCard(item);
     });
+
+    const section1 = document.createElement("div");
+    section1.innerText = item.name; // Modify as needed for your use case
+    section1.style.flex = '1';
+
+    const section2 = document.createElement("div");
+    section2.innerText = item.artists[0].name; // Modify as needed for your use case
+    section2.style.flex = '1';
+
+    const section3 = document.createElement("div");
+    section3.innerText = item.album.name; // Modify as needed for your use case
+    section3.style.flex = '1';
+
+    const img = document.createElement("img");
+    img.src = item.album.images[2].url;
+    img.alt = item.name + " album art";
+    img.style.width = '5%'; // Adjust as needed to make the image smaller
+    div.appendChild(img);
+
+    div.appendChild(section1);
+    div.appendChild(section2);
+    div.appendChild(section3);
+    
     searchResults.appendChild(div);
+    // }
+    // Console log when an explicit song is found
+    //else {
+    //console.log("Explicit song found, skipping...");
+    //}
   }
 }
 
+
 // Add a track to a staging card before adding to playlist
 function addTrackToStagingCard(item) {
-  // Clear the staging card before adding new track information
-  const a = document.getElementById("songTitle");
-  a.innerText = item.name;
-  a.classList.add("stagingCardItem");
+  // Get the elements
+  const songTitle = document.getElementById("songTitle");
+  const artistName = document.getElementById("artistName");
+  const albumName = document.getElementById("albumName");
+  const albumArt = document.getElementById("albumArt");
+
+  // Populate the content
+  songTitle.innerText = item.name;
+  artistName.innerText = item.artists[0].name;
+  albumName.innerText = item.album.name;
+  albumArt.src = item.album.images[0].url;
+  albumArt.alt = item.name + " album art";
 
   // Remove any existing event listeners from the submitButton 
-  // const submitButton = document.getElementById('submitButton');
-  
   const button = document.getElementById('submitButton');
   const buttonWithoutListeners = removeAllEventListeners(button);
 
   // Add the addTrackToPlaylist function to the button with id submitButton
-  buttonWithoutListeners.addEventListener('click', () => addTrackToPlaylist(item));
+  buttonWithoutListeners.addEventListener('click', () => {
+    addTrackToPlaylist(item);
+    clearStagingCard();
+  });
 }
 
+// Clear the staging card
+function clearStagingCard() {
+  // Get the elements
+  const songTitle = document.getElementById("songTitle");
+  const artistName = document.getElementById("artistName");
+  const albumName = document.getElementById("albumName");
+  const albumArt = document.getElementById("albumArt");
+
+  // Clear the content
+  songTitle.innerHTML = '';
+  artistName.innerHTML = '';
+  albumName.innerHTML = '';
+  albumArt.src = '';
+  albumArt.alt = '';
+}
+
+
 async function addTrackToPlaylist(item) {
-  const trackUri = item.uri;
-  const playlistId = '5TQSBRY3Ie9J7FQPr2nSU4'; // Replace this with the desired playlist ID
-  // Clear the current name of the staged track from the staging card
-  const a = document.getElementById("songTitle");
-  a.innerText = '';
   // Decrement the allowance of the user
-  decrementAllowance()
-  await addTrack(playlistId, [trackUri]); // Pass an array with the trackUri
+  await addTrackToDb(item); // Pass an array with the trackUri
 }
 
 function removeAllEventListeners(element) {
@@ -284,9 +170,16 @@ function removeAllEventListeners(element) {
   return clonedElement;
 }
 
+const search = document.getElementById("searchButton");
+search.addEventListener("click", searchSpotify);
 
-document.getElementById('searchButton').addEventListener('click', searchSpotify);
+// also enact the search if the user presses enter
+document.getElementById('searchInput').addEventListener('keydown', function(e) {
+  if (e.key == 'Enter') {
+      // call your function here
+      searchSpotify();
+  }
+});
 
-document.getElementById('login-button-2').addEventListener('click', getProfile);
-//handleCallback();
+clientCredentials();
 

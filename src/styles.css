@@ -1,21 +1,116 @@
+@import url('https://fonts.googleapis.com/css2?family=Mr+Dafoe&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Exo:wght@900&display=swap');
+
 * { box-sizing:border-box; }
 
 body {
-	font-family: Helvetica;
-	background: #eee;
-  -webkit-font-smoothing: antialiased;
+	background: #000119;
+	font-family: Poppins, sans-serif;
+  	margin: 0;
+  	min-block-size: 100vh;
+  	place-items: center;
+  	padding: 5vmin;
 }
 
 .header { 
 	text-align:center;
-	margin-top: 4em;
 }
 
-h1, h3 { font-weight: 300; }
+h3 { font-weight: 300;
+	color: #4a89dc;  }
 
-h1 { color: #636363; }
+#retro {
+width: 100%;
+height: 100%;
+margin: 0;
+overflow: none;
+display: flex;
+align-items: center;
+justify-content: center;
+flex-direction: column;
+background: radial-gradient(rgba(#7600bf, 0.5) 0%, transparent 70%), linear-gradient(#0b161e 40%, #202076 70%);
+perspective: 700px;
+font-size: clamp(10px, 2vw, 20px);
+}
+	
+#retro .lines {
+color: #59c1fe;
+position: fixed;
+width: 100vw;
+height: 4em;
+background: linear-gradient(rgba(0, 0, 255, 0.2) 20%, blue 40%, blue 60%, rgba(0, 0, 255, 0.2) 80%);
+background-size: 1px 0.5em;
+box-shadow: 0 0 1em rgba(0, 0, 255, 0.4);
+transform: translateY(-1em);
+left: 0;
+}
 
-h3 { color: #4a89dc; }
+
+#retro h1{
+	/* h1 styles */
+	/* Note: For nested selectors, you can use > symbol, like: .retro > h1 > span */
+position: relative;
+font-family: 'Exo';
+font-size: 9em;
+margin: 0;
+transform: skew(-15deg);
+letter-spacing: 0.03em;
+}
+#retro h1::after {
+    content: '';
+    position: absolute;
+    top: -0.1em;
+    right: 0.05em;
+    width: 0.4em;
+    height: 0.4em;
+    background: 
+      radial-gradient(white 3%, rgba(white, 0.3) 15%, rgba(white, 0.05) 60%, transparent 80%),
+      radial-gradient(rgba(white, 0.2) 50%, transparent 60%) 50% 50% / 5% 100%,
+      radial-gradient(rgba(white, 0.2) 50%, transparent 60%) 50% 50% / 70% 5%;
+    background-repeat: no-repeat;
+}
+#retro h1 span:first-child {
+    display: block;
+    text-shadow: 0 0 0.1em #8ba2d0, 0 0 0.2em black,  0 0 5em #165ff3;
+    -webkit-text-stroke: 0.06em rgba(black, 0.5);
+  }
+  
+#retro h1 span:last-child {
+    position: absolute;
+    left: 0;
+    top: 0;
+    background-image: linear-gradient(#032d50 25%, #00a1ef 35%, white 50%, #20125f 50%, #8313e7 55%, #ff61af 75%);
+    -webkit-text-stroke: 0.01em #94a0b9;
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+}
+
+
+#retro h2 {
+	/* h2 styles */
+	font-family: 'Mr Dafoe';
+  margin: 0;
+  font-size: 5.5em;
+  margin-top: -0.6em;
+  color: white;
+  text-shadow: 0 0 0.05em #fff, 0 0 0.2em #fe05e1, 0 0 0.3em #fe05e1;
+  transform: rotate(-7deg);
+}
+
+
+#retro .grid {
+background: 
+linear-gradient(transparent 65%, rgba(46, 38, 255, 0.4) 75%, #7d41e6 80%, rgba(46, 38, 255, 0.4) 85%, transparent 95%),
+linear-gradient(90deg, transparent 65%, rgba(46, 38, 255, 0.4) 75%, #7d41e6 80%, rgba(46, 38, 255, 0.4) 85%, transparent 95%);
+  background-size: 30px 30px;
+  width: 200vw;
+  height: 300vh;
+  position: absolute;
+  overflow:hidden;
+  bottom: -120vh;
+  transform: rotateX(-100deg);
+  -webkit-mask-image: linear-gradient(rgba(0,0,0,1), rgba(0,0,0,0) 80%);
+}
 
 form {
 	width: 380px;
@@ -190,11 +285,9 @@ footer img:focus , footer a:focus { outline: none; }
 	color: #00a84f;
 	display: block;
 	height: 50px;
-	font-size: 1.4em;
 	padding: 4px;
 	position: relative;
 	text-decoration: none;
-	width: 7em;
 	z-index: 2;
 	margin: 10px;
   }
@@ -221,5 +314,206 @@ footer img:focus , footer a:focus { outline: none; }
   .hidden {
 	display: none;
   }
+  .buttonspan {
+	text-size-adjust: auto;
+	padding: 4px;
+  }
+ 
+  #btnLogout {
+	width: 40 px
+  }
 
-  
+  .spacer {
+	height: 50px;
+	background-color: olive;
+  }
+
+.stagingCardItem {
+	font-family: 'Roboto Mono', monospace;
+    padding: 20px;
+    margin: 10px auto;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background-color: #fff;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    max-width: 500px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+/* Image */
+.stagingCardItem img {
+    width: 100%; /* Make the image expand to the width of the container */
+    height: auto;
+    margin-bottom: 15px;
+    border-radius: 5px;
+	font-size: 20px;
+}
+
+/* Song Title */
+.stagingCardItem #songTitle {
+    font-size: 18px;
+    font-weight: bold;
+    margin-left: 10px;
+	text-color:#00a1ef
+}
+
+/* Artist Name */
+.stagingCardItem #artistName {
+    font-size: 16px;
+    color: purple;
+}
+
+/* Album Name */
+.stagingCardItem #albumName {
+    font-size: 14px;
+    color: #999;
+}
+
+/* Search result styling */
+/* Container for each search result */
+.searchResultItem {
+    border: 2px solid #00a950;
+    padding: 10px;
+    margin: auto;
+    border-radius: 5px;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    font-family: 'Roboto Mono', monospace; /* This is a modern, techy-looking font */
+	background-color: #ddd;
+}
+
+/* Image */
+.searchResultItem img {
+    width: 50%;
+	height: 50%;
+}
+
+/* Song Title */
+.searchResultItem div:nth-child(2) {
+    font-size: 18px;
+    font-weight: bold;
+    margin-left: 10px;
+	color:#00a1ef
+}
+
+/* Artist Name */
+.searchResultItem div:nth-child(3) {
+    font-size: 16px;
+    color: purple;
+}
+
+/* Album Name */
+.searchResultItem div:nth-child(4) {
+    font-size: 14px;
+    color: #999;
+}
+
+.searchContainer {
+	display: flex;
+	justify-content: space-around; /* This adds some space between the two columns */
+	align-items: flex-start; /* This aligns the columns to the top of the container */
+	flex-wrap: wrap; /* This allows the items to wrap onto the next line if the window is too small */
+  }
+
+  #searchResults, #stagingCard {
+	flex-basis: 45%; /* This means each box will take up 45% of the container's width */
+	margin: 1em; /* Optional: adds some space around each box */
+  }
+
+ .inputContainer {
+	display: flex;
+ }
+
+ .mobile .inputContainer {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	z-index: 1;
+	padding: 4px;
+ }
+
+/* Mobile Specific */
+
+.mobile {
+	display: flex;
+}
+
+.mobile .searchResultItem {
+    padding: 5px; /* Adjust as per your needs */
+}
+
+.mobile .searchResultItem div:nth-child(2) {
+    font-size: 12px;  /* Adjust as per your needs */
+}
+
+.mobile .searchResultItem div:nth-child(3) {
+    font-size: 12px;  /* Adjust as per your needs */
+}
+
+.mobile .searchResultItem div:nth-child(4) {
+    font-size: 10px;  /* Adjust as per your needs */
+}
+
+
+#userName, #userAllowance {
+	color: #00a1ef;
+	font-family: 'Roboto Mono', monospace;
+	font-size: 12px;
+}
+
+#userAllowance {
+	font-size: 22px;
+	display: flex;
+	justify-content: center;
+	font-weight: bold;
+	height: 4vh; /* You can adjust this value based on your needs */
+}
+
+.mobile #userName, .mobile #userAllowance {
+	position: relative;
+	padding: 10px;
+	z-index: 2;
+}
+
+.mobile #stagingCard {
+	display: flexbox;
+	flex-direction: row;
+	position: fixed;
+    bottom: 0; /* this sets it to the bottom of the screen */
+    left: 0; /* this sets it to the left of the screen */
+    width: 90%; /* this makes it span the entire width of the screen */
+    z-index: 1; /* this makes sure it appears above other content */
+    background: #f0f0f0; /* this gives it a light gray background */
+    /* you may want to add some padding here to space out the content */
+	padding: 10px;
+}
+
+
+.mobile #stagingCard img {
+    width: 50px; /* adjust as needed */
+    height: 50px; /* adjust as needed */
+}
+
+.mobile #stagingCard #songTitle,
+.mobile #stagingCard #artistName,
+.mobile #stagingCard #albumName {
+    font-size: 10px;
+	padding: 5px; /* adjust as needed */
+}
+
+.mobile #submitButton,
+.mobile #submitSpan {
+	flex-direction: column;
+	font-size: 12px;
+}
+
+.mobile .stagingCardItem #albumName {
+	display: none;
+}

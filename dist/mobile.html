@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mobile Page</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap" rel="stylesheet">
+<script defer src="mobile.bundle.js"></script></head>
+
+
+<body>
+    <div class ="mobile">
+      <!-- Pre user auth div -->
+      <!-- Pre user auth div -->
+    <div id="login">
+      <h1>Hello! Please Log in Below!</h1>
+      <form>
+        <div class="group">
+          <input id="txtEmail" type="email">
+          <label>Email</label>
+        </div>
+        <div class="group">
+          <input id="txtPassword" type="password">
+          <label>Password</label>
+        </div>
+        <div id="divLoginError" class="group">
+          <div id="lblLoginErrorMessage" class="errorlabel">Error message</div>
+        </div>
+        <button id="btnLogin" type="button" class="buttonBlue">Log in</button>
+        <button id="btnSignup" type="button" class="buttonBlue">Sign up</button>
+      </form>
+    </div>
+    <!-- Post user auth div -->
+      <div id="app">
+        <div id="retro">
+          <div class="lines"></div>
+          <h1 class>
+            <span>Virtual</span>
+            <span>Virtual</span>
+          </h1>
+          <h2>Jukebox</h2>
+        </div>
+        <!-- A section of the page committed to telling the user who they are signed in as and what their current allowance is -->
+        <span id="userName"></span>
+        <span id="userAllowance"></span>
+        <!-- Parent html element for searching and display of the card -->
+        
+          <!-- A form that allows you to submit the name of a song to the playlist managers... -->
+        <div class="inputContainer">
+        <input type="text" id="searchInput" placeholder="Enter your search query">
+        <a class="button" id = "searchButton"><span class="buttonspan">search</span></a>
+        </div>  
+          <div class = "searchContainer">
+            <div id="searchResults"></div>
+              <div id="stagingCard" class="stagingCardItem">
+                <img src="" alt="" id="albumArt">
+                <div id="songTitle"></div>
+                <div id="artistName"></div>
+                <div id="albumName"></div>
+                <a class="button" id = "submitButton"><span class="buttonspan" id = "submitSpan">Request</span></a>
+            </div>
+      </div>
+      <button id="btnLogout" type="button" class="button buttonBlue"><span class = "buttonspan">Log out</span></button>
+      <button id="csvDown" type="button" class="button buttonBlue hidden"><span class = "buttonspan">Download Uris</span></button>
+    </div>
