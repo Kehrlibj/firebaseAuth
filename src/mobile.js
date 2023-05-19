@@ -282,7 +282,7 @@ async function showDownloadButton() {
 async function getClientInfo() {
   const DocRef = doc(db, "clientInfo", "gargoyle");
   const collect = await getDoc(DocRef);
-  return clientCredentials(collect.data().clientId, collect.data().clientSecret);
+  return clientCredentials(collect.data().ID, collect.data().secret);
 }
 
 

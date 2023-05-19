@@ -15,7 +15,15 @@
   <div class ="desktop">
     <!-- Pre user auth div -->
     <div id="login">
-      <h1>Hello! Please Log in Below!</h1>
+      <div id="retro">
+        <div class="grid"></div>
+        <div class="lines"></div>
+        <h1 class>
+          <span>Virtual</span>
+          <span>Virtual</span>
+        </h1>
+        <h2>Jukebox</h2>
+      </div>
       <form>
         <div class="group">
           <input id="txtEmail" type="email">
@@ -64,10 +72,16 @@
                 <div id="albumName"></div>
                 <a class="button" id = "submitButton"><span class="buttonspan" id = "submitSpan">Request</span></a>
                 </div>
+              </div>
+            </div>
         </div>
-      </div>
-    </div>
+        <!-- A section of the page committed to displaying the most recently added songs -->
+        <span>Recently Added Songs:</span>
+        <div id="songHistoryCarousel" class="carousel">
+          <!-- Song cards will be inserted here -->
+        </div>
     <button id="btnLogout" type="button" class="button buttonBlue"><span class = "buttonspan">Log out</span></button>
     <button id="csvDown" type="button" class="button buttonBlue hidden"><span class = "buttonspan">Download Uris</span></button>
+    <button id="addCredit" type="button" class="button buttonBlue hidden"><span class = "buttonspan">Add Credits</span></button>
   </div>
 </div>

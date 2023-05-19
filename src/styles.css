@@ -517,3 +517,20 @@ footer img:focus , footer a:focus { outline: none; }
 .mobile .stagingCardItem #albumName {
 	display: none;
 }
+
+.carousel {
+	display: flex;
+	overflow-x: auto;
+	scroll-snap-type: x mandatory;
+  }
+  
+  .carousel div {
+	flex: 0 0 auto;
+	margin-right: 3px;
+	scroll-snap-align: start;
+	width: 100px;  /* width of the song card, adjust as needed */
+	height: 75px; /* height of the song card, adjust as needed */
+	border: 1px solid #ccc;
+	border-radius: 3px;
+	background-color: #f4f4f4;
+  }

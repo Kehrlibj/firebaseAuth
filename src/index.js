@@ -11,6 +11,8 @@ import {
   showLoginError
 } from './ui'
 
+import {gsap} from "gsap";
+
 import { initializeApp } from 'firebase/app';
 
 import { 
@@ -142,6 +144,7 @@ async function isAdmin(user){
   if (userData.userName == "Admin") {
     // Assuming the button has an id of "adminButton"
     document.getElementById("csvDown").style.display = "block";
+    document.getElementById("addCredit").style.display = "block";
   } else {
     document.getElementById("csvDown").style.display = "none";
   }
@@ -183,6 +186,9 @@ export async function addTrackToDb(item) {
   const trackId = item.id;
   const songHistoryDocRef = doc(db, "songHistory", trackId);
   const trackTitle = item.name;
+  const art = item.album.images[0].url;
+  const artist = item.artists[0].name;
+  const album = item.album.name;
   if (userDocSnap.exists()) {
     const addedSongDocRef = doc(db, "addedSongs", trackId);
     const dupCheck = await checkSongExistence(trackId);
@@ -221,7 +227,7 @@ export async function addTrackToDb(item) {
     await setDoc(addedSongDocRef, {
       songId: trackId,
       songUri: trackUri,
-      songTitle: trackTitle
+      songTitle: trackTitle,
     },
     { merge: true })
         .then(async () => {
@@ -229,7 +235,10 @@ export async function addTrackToDb(item) {
           await setDoc(songHistoryDocRef, {
             songId: trackId,
             songUri: trackUri,
-            songTitle: trackTitle
+            songTitle: trackTitle,
+            albumArt: art,
+            artist: artist,
+            album: album,
           },
           { merge: true });
         Swal.fire(
@@ -321,14 +330,92 @@ document.getElementById("txtPassword").addEventListener("keydown", function(even
   }
 });
 
+async function addCredit(user) {
+  const userDocRef = doc(db, "users", user.uid);
+  const userDocSnap = await getDoc(userDocRef);
+  
+  if (!userDocSnap.exists()) {
+    console.log("User does not exist!");
+    return;
+  }
+
+  const userData = userDocSnap.data();
+  const newAllowance = userData.allowance + 1;
+  
+  const newUserData = {
+    ...userData,
+    allowance: newAllowance,
+  };
+
+  await setDoc(userDocRef, newUserData);
+  
+  // Update the allowance displayed on the page, if necessary
+  document.getElementById("userAllowance").textContent = `Allowance: ${newAllowance}`;
+}
+
+// Function to load song history and display it on the page
+async function loadSongHistory() {
+  const songHistoryRef = collection(db, "songHistory");
+  const songHistorySnapshot = await getDocs(songHistoryRef);
+
+  songHistorySnapshot.forEach(doc => {
+    const songData = doc.data();
+    displaySongCard(songData);
+  });
+}
+
+function displaySongCard(songData) {
+  const history = document.getElementById("songHistoryCarousel");
+  const div = document.createElement("div");
+
+  const section1 = document.createElement("div");
+  section1.innerText = songData.songTitle; // Modify as needed for your use case
+
+  const section2 = document.createElement("div");
+  section2.innerText = songData.artist; // Modify as needed for your use case
+
+  const section3 = document.createElement("div");
+  section3.innerText = songData.album; // Modify as needed for your use case
+
+  const img = document.createElement("img");
+  img.src = songData.albumArt;
+  img.alt = songData.songTitle + " album art";
+  img.style.width = '50%'; // Adjust as needed to make the image smaller
+  div.appendChild(img);
+
+  div.appendChild(section1);
+  div.appendChild(section2);
+  div.appendChild(section3);
+  
+  history.appendChild(div);
+}
+
+
+
+
+
+
+
 
 // Event listeners
 btnLogin.addEventListener("click", loginEmailPassword) 
 btnSignup.addEventListener("click", createAccount)
 btnLogout.addEventListener("click", logout)
 
+document.getElementById("addCredit").addEventListener("click", function() {
+  const user = auth.currentUser;
+  
+  if (!user) {
+    console.log("No user is currently logged in.");
+    return;
+  }
+  
+  addCredit(user).catch(console.error);
+});
+
 
 monitorAuthState();
 showDownloadButton();
 detectAndRedirectMobile();
 getClientInfo();
+loadSongHistory().catch(console.error);
