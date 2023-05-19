@@ -119,7 +119,8 @@ const monitorAuthState = async () => {
   onAuthStateChanged(auth, user => {
     if (user) {
       showApp()
-      isAdmin(user.uid)
+      console.log(user)
+      isAdmin(user)
       showLoginState(user)
       hideLoginError()
       displayUserData(user.uid)
@@ -133,10 +134,11 @@ const monitorAuthState = async () => {
 }
 
 // check Admin state
-async function isAdmin(uid){
-  const userDocRef = doc(db, "users", uid);
+async function isAdmin(user){
+  const userDocRef = doc(db, "users", user.uid);
   const userDocSnap = await getDoc(userDocRef);
   const userData = userDocSnap.data();
+  console.log(userData);
   if (userData.userName == "Admin") {
     // Assuming the button has an id of "adminButton"
     document.getElementById("csvDown").style.display = "block";
@@ -179,6 +181,7 @@ export async function addTrackToDb(item) {
   const userDocSnap = await getDoc(userDocRef);
   const trackUri = item.uri;
   const trackId = item.id;
+  const songHistoryDocRef = doc(db, "songHistory", trackId);
   const trackTitle = item.name;
   if (userDocSnap.exists()) {
     const addedSongDocRef = doc(db, "addedSongs", trackId);
@@ -221,7 +224,14 @@ export async function addTrackToDb(item) {
       songTitle: trackTitle
     },
     { merge: true })
-      .then(() => {
+        .then(async () => {
+          // Add song to song history
+          await setDoc(songHistoryDocRef, {
+            songId: trackId,
+            songUri: trackUri,
+            songTitle: trackTitle
+          },
+          { merge: true });
         Swal.fire(
           'Success!',
           'You have added your music to the mix!',
@@ -293,7 +303,8 @@ async function showDownloadButton() {
 async function getClientInfo() {
   const DocRef = doc(db, "clientInfo", "gargoyle");
   const collect = await getDoc(DocRef);
-  return clientCredentials(collect.data().clientId, collect.data().clientSecret);
+  console.log(collect.data().ID, collect.data().secret)
+  return clientCredentials(collect.data().ID, collect.data().secret);
 }
 
 document.getElementById("txtEmail").addEventListener("keydown", function(event) {
@@ -309,6 +320,7 @@ document.getElementById("txtPassword").addEventListener("keydown", function(even
       loginEmailPassword(); // Replace this with your actual login function
   }
 });
+
 
 // Event listeners
 btnLogin.addEventListener("click", loginEmailPassword) 

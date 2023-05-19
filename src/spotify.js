@@ -40,7 +40,6 @@ export async function clientCredentials(client_id, client_secret) {
 async function searchSpotify() {
   const searchInput = document.getElementById("searchInput").value;
   const searchType = "track";
-  clientCredentials();
   const accessToken = localStorage.getItem('access-token');
 
   try {
@@ -55,6 +54,7 @@ async function searchSpotify() {
     }
 
     const data = await response.json();
+    console.log(data);
     displaySearchResults(data);
     const candy = document.getElementById("retro");
     candy.style.display = "none";
@@ -181,5 +181,5 @@ document.getElementById('searchInput').addEventListener('keydown', function(e) {
   }
 });
 
-clientCredentials();
+
 
